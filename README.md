@@ -262,13 +262,11 @@ User uploads resume + pastes JD
 
 ---
 
-## 👥 Team & Role Distribution
+## 👤 Developer
 
-| Role | Name | Contribution |
+| Name | Role | Contribution |
 |------|------|-------------|
-| **AI/ML Engineer** | Akash | Gemini API integration, prompt engineering, AI response parsing |
-| **Full-Stack Developer** | Ali Ahmad | Django backend, database models, frontend UI, Chart.js |
-| **Third Member** | — | PDF parsing, report generation, testing |
+| **Ali Ahmad** | Full-Stack Developer | Complete project — Django backend, Gemini AI integration, frontend UI, Chart.js visualization, PDF parsing & generation, responsive design |
 
 ---
 
