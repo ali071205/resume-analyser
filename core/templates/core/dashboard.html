@@ -1,0 +1,386 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Analysis Dashboard — SkillSync AI{% endblock %}
+
+{% block content %}
+<section class="dashboard-section" id="dashboard-section">
+    <div class="dashboard-container">
+        
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="dashboard-title-group">
+                <h1 class="page-title">Analysis <span class="gradient-text">Dashboard</span></h1>
+                <p class="page-subtitle">
+                    Resume: <strong>{{ analysis.resume.original_filename }}</strong>
+                    {% if analysis.job_title %}• Role: <strong>{{ analysis.job_title }}</strong>{% endif %}
+                </p>
+            </div>
+            <div class="dashboard-actions">
+                <a href="{% url 'download_report' analysis.id %}" class="btn btn-primary" id="download-pdf-btn">
+                    <span class="btn-icon">📋</span>
+                    Download PDF
+                </a>
+                <a href="{% url 'upload' %}" class="btn btn-ghost" id="new-analysis-btn">
+                    + New Analysis
+                </a>
+            </div>
+        </div>
+        
+        <!-- Score & Category Row -->
+        <div class="metrics-row" id="metrics-row">
+            <!-- Overall Score Card -->
+            <div class="metric-card glass-card score-card" id="score-card">
+                <h3 class="metric-label">Overall Match Score</h3>
+                <div class="score-ring-container">
+                    <svg class="score-ring" viewBox="0 0 120 120" id="score-ring-svg">
+                        <circle class="score-ring-bg" cx="60" cy="60" r="52" />
+                        <circle class="score-ring-fill" cx="60" cy="60" r="52" 
+                            stroke-dasharray="326.73" 
+                            stroke-dashoffset="326.73"
+                            data-score="{{ analysis.overall_score }}" />
+                    </svg>
+                    <div class="score-value" id="score-value">
+                        <span class="score-number" data-target="{{ analysis.overall_score|floatformat:0 }}">0</span>
+                        <span class="score-percent">%</span>
+                    </div>
+                </div>
+                <p class="score-interpretation" id="score-interpretation">
+                    {% if analysis.overall_score >= 80 %}
+                        🟢 Excellent Match
+                    {% elif analysis.overall_score >= 60 %}
+                        🟡 Good Match
+                    {% elif analysis.overall_score >= 40 %}
+                        🟠 Partial Match
+                    {% else %}
+                        🔴 Needs Improvement
+                    {% endif %}
+                </p>
+            </div>
+            
+            <!-- Category Card -->
+            <div class="metric-card glass-card" id="category-card">
+                <h3 class="metric-label">Candidate Category</h3>
+                <div class="category-badge-lg">
+                    {% if analysis.category == 'frontend' %}🎨
+                    {% elif analysis.category == 'backend' %}⚙️
+                    {% elif analysis.category == 'fullstack' %}🔗
+                    {% elif analysis.category == 'ml' %}🧠
+                    {% elif analysis.category == 'devops' %}🐳
+                    {% elif analysis.category == 'data' %}📊
+                    {% elif analysis.category == 'mobile' %}📱
+                    {% else %}💻
+                    {% endif %}
+                </div>
+                <p class="category-name">{{ analysis.get_category_display }}</p>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="metric-card glass-card" id="stats-card">
+                <h3 class="metric-label">Quick Stats</h3>
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <span class="quick-stat-value matched-color">{{ matched_skills|length }}</span>
+                        <span class="quick-stat-label">Matched Skills</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-stat-value missing-color">{{ missing_skills|length }}</span>
+                        <span class="quick-stat-label">Missing Skills</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="quick-stat-value total-color">{{ resume_skills|length }}</span>
+                        <span class="quick-stat-label">Total Skills Found</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Row -->
+        <div class="charts-row" id="charts-row">
+            <!-- Radar Chart -->
+            <div class="chart-card glass-card" id="radar-chart-card">
+                <h3 class="card-title">Skill Proficiency Comparison</h3>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Bar Chart -->
+            <div class="chart-card glass-card" id="bar-chart-card">
+                <h3 class="card-title">Skill Gap Analysis</h3>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Skills Tags Row -->
+        <div class="skills-row" id="skills-row">
+            <!-- Matched Skills -->
+            <div class="skills-card glass-card" id="matched-skills-card">
+                <h3 class="card-title">✅ Matched Skills</h3>
+                <div class="skills-tags">
+                    {% for skill in matched_skills %}
+                    <span class="skill-tag matched">{{ skill }}</span>
+                    {% empty %}
+                    <p class="no-data">No matching skills found</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Missing Skills -->
+            <div class="skills-card glass-card" id="missing-skills-card">
+                <h3 class="card-title">❌ Skill Gaps</h3>
+                <div class="skills-tags">
+                    {% for skill in missing_skills %}
+                    <span class="skill-tag missing">{{ skill }}</span>
+                    {% empty %}
+                    <p class="no-data">No skill gaps — perfect match!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Strengths -->
+        {% if strengths %}
+        <div class="strengths-card glass-card" id="strengths-card">
+            <h3 class="card-title">💪 Key Strengths</h3>
+            <div class="strengths-list">
+                {% for strength in strengths %}
+                <div class="strength-item">
+                    <span class="strength-icon">⭐</span>
+                    <span>{{ strength }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Detailed Feedback -->
+        {% if analysis.detailed_feedback %}
+        <div class="feedback-card glass-card" id="feedback-card">
+            <h3 class="card-title">📝 Detailed Analysis</h3>
+            <div class="feedback-content">
+                {{ analysis.detailed_feedback|linebreaksbr }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Recommendations -->
+        {% if recommendations %}
+        <div class="recommendations-section" id="recommendations-section">
+            <h3 class="section-title-sm">🚀 Recommended Actions to Fill Skill Gaps</h3>
+            <div class="recommendations-grid">
+                {% for rec in recommendations %}
+                <div class="recommendation-card glass-card">
+                    {% if rec.title %}
+                        <h4 class="rec-title">{{ rec.title }}</h4>
+                        {% if rec.skill_target %}
+                        <span class="rec-target">Target: {{ rec.skill_target }}</span>
+                        {% endif %}
+                        {% if rec.description %}
+                        <p class="rec-desc">{{ rec.description }}</p>
+                        {% endif %}
+                    {% else %}
+                        <p class="rec-desc">{{ rec }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Chart data from Django context
+    const chartLabels = {{ chart_labels|safe }};
+    const chartCurrent = {{ chart_current|safe }};
+    const chartRequired = {{ chart_required|safe }};
+    const overallScore = {{ overall_score }};
+    
+    // Color Palette matching the CSS theme
+    const colors = {
+        primary: 'rgba(15, 15, 15, 1)',         // #0F0F0F Black
+        primaryFade: 'rgba(15, 15, 15, 0.1)',
+        accent: 'rgba(230, 57, 70, 1)',         // #E63946 Deep Red
+        accentFade: 'rgba(230, 57, 70, 0.2)',
+        success: 'rgba(25, 135, 84, 1)',        // Green
+        successFade: 'rgba(25, 135, 84, 0.2)',
+        danger: 'rgba(230, 57, 70, 1)',         // Red
+        dangerFade: 'rgba(230, 57, 70, 0.2)',
+        text: 'rgba(33, 37, 41, 0.8)',          // Dark Gray
+        grid: 'rgba(222, 226, 230, 0.5)',       // Border Color
+    };
+    
+    // Chart.js Global Defaults
+    Chart.defaults.color = colors.text;
+    Chart.defaults.borderColor = colors.grid;
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    
+    // Radar Chart
+    if (chartLabels.length > 0) {
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: chartLabels,
+                datasets: [
+                    {
+                        label: 'Your Skills',
+                        data: chartCurrent,
+                        borderColor: colors.primary,
+                        backgroundColor: colors.primaryFade,
+                        borderWidth: 2,
+                        pointBackgroundColor: colors.primary,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointRadius: 4,
+                    },
+                    {
+                        label: 'Required Level',
+                        data: chartRequired,
+                        borderColor: colors.accent,
+                        backgroundColor: colors.accentFade,
+                        borderWidth: 2,
+                        pointBackgroundColor: colors.accent,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointRadius: 4,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20,
+                            backdropColor: 'transparent',
+                            font: { size: 10 }
+                        },
+                        grid: { color: colors.grid },
+                        angleLines: { color: colors.grid },
+                        pointLabels: {
+                            font: { size: 11, weight: '500' },
+                            color: colors.text,
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Bar Chart
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const gapData = chartLabels.map((_, i) => chartRequired[i] - chartCurrent[i]);
+        const barColors = gapData.map(g => g > 0 ? colors.danger : colors.success);
+        const barBgColors = gapData.map(g => g > 0 ? colors.dangerFade : colors.successFade);
+        
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: chartLabels,
+                datasets: [{
+                    label: 'Skill Gap (Required - Current)',
+                    data: gapData,
+                    backgroundColor: barBgColors,
+                    borderColor: barColors,
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        grid: { color: colors.grid },
+                        ticks: { font: { size: 11 } }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11, weight: '500' } }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: { size: 12 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const val = context.raw;
+                                return val > 0 
+                                    ? `Gap: ${val} points behind` 
+                                    : `Ahead: ${Math.abs(val)} points surplus`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Animate Score Ring
+    setTimeout(() => {
+        const ring = document.querySelector('.score-ring-fill');
+        if (ring) {
+            const circumference = 326.73;
+            const offset = circumference - (overallScore / 100) * circumference;
+            ring.style.strokeDashoffset = offset;
+        }
+        
+        // Animate score counter
+        const scoreEl = document.querySelector('.score-number');
+        if (scoreEl) {
+            const target = parseInt(scoreEl.dataset.target);
+            let current = 0;
+            const increment = target / 60;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                scoreEl.textContent = Math.round(current);
+            }, 16);
+        }
+    }, 300);
+    
+    // Intersection Observer for card animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.glass-card, .skills-card, .feedback-card, .recommendation-card').forEach(el => {
+        observer.observe(el);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+# Environment
+.env
+.eny
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+*.log
+.vscode/
+.idea/

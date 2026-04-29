@@ -1,0 +1,162 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Upload Resume — SkillSync AI{% endblock %}
+
+{% block content %}
+<section class="upload-section" id="upload-section">
+    <div class="upload-container">
+        <div class="upload-header">
+            <h1 class="page-title">Analyze Your <span class="gradient-text">Resume</span></h1>
+            <p class="page-subtitle">Upload your resume and paste the job description to get an AI-powered analysis</p>
+        </div>
+        
+        <form method="post" enctype="multipart/form-data" class="upload-form glass-card" id="upload-form">
+            {% csrf_token %}
+            
+            <!-- File Upload Zone -->
+            <div class="form-group">
+                <label class="form-label" for="resume-file-input">
+                    <span class="label-icon">📄</span>
+                    Resume File
+                </label>
+                <div class="dropzone" id="dropzone">
+                    <div class="dropzone-content">
+                        <span class="dropzone-icon">📁</span>
+                        <p class="dropzone-text">
+                            <strong>Drag & drop</strong> your resume here, or 
+                            <span class="dropzone-browse">browse</span>
+                        </p>
+                        <p class="dropzone-hint">PDF or DOCX • Max 10MB</p>
+                    </div>
+                    <div class="dropzone-preview" id="dropzone-preview" style="display: none;">
+                        <span class="preview-icon">✅</span>
+                        <span class="preview-name" id="preview-filename"></span>
+                        <button type="button" class="preview-remove" id="preview-remove">✕</button>
+                    </div>
+                    {{ form.resume_file }}
+                </div>
+                {% if form.resume_file.errors %}
+                <div class="form-error">{{ form.resume_file.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Job Title -->
+            <div class="form-group">
+                <label class="form-label" for="job-title-input">
+                    <span class="label-icon">💼</span>
+                    Job Title <span class="label-optional">(Optional)</span>
+                </label>
+                {{ form.job_title }}
+                {% if form.job_title.errors %}
+                <div class="form-error">{{ form.job_title.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Job Description -->
+            <div class="form-group">
+                <label class="form-label" for="job-description-input">
+                    <span class="label-icon">📝</span>
+                    Job Description
+                </label>
+                {{ form.job_description }}
+                {% if form.job_description.errors %}
+                <div class="form-error">{{ form.job_description.errors.0 }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
+                <span class="btn-icon">🤖</span>
+                <span class="btn-text">Analyze with AI</span>
+                <span class="btn-loading" style="display: none;">
+                    <span class="spinner"></span>
+                    Analyzing...
+                </span>
+            </button>
+            
+            <p class="form-note">
+                ⚡ Analysis typically takes 10-20 seconds depending on resume complexity.
+            </p>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Drag & Drop functionality
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('resume-file-input');
+    const preview = document.getElementById('dropzone-preview');
+    const previewName = document.getElementById('preview-filename');
+    const previewRemove = document.getElementById('preview-remove');
+    const dropContent = dropzone.querySelector('.dropzone-content');
+    
+    // Click to browse
+    dropzone.addEventListener('click', (e) => {
+        if (e.target !== previewRemove && !e.target.closest('.preview-remove')) {
+            fileInput.click();
+        }
+    });
+    
+    // Drag events
+    ['dragenter', 'dragover'].forEach(event => {
+        dropzone.addEventListener(event, (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+    });
+    
+    ['dragleave', 'drop'].forEach(event => {
+        dropzone.addEventListener(event, (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+        });
+    });
+    
+    dropzone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            showPreview(files[0]);
+        }
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            showPreview(fileInput.files[0]);
+        }
+    });
+    
+    function showPreview(file) {
+        previewName.textContent = file.name;
+        dropContent.style.display = 'none';
+        preview.style.display = 'flex';
+    }
+    
+    previewRemove.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fileInput.value = '';
+        dropContent.style.display = 'flex';
+        preview.style.display = 'none';
+    });
+    
+    // Form submit loading state
+    const form = document.getElementById('upload-form');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    form.addEventListener('submit', () => {
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnLoading = submitBtn.querySelector('.btn-loading');
+        const btnIcon = submitBtn.querySelector('.btn-icon');
+        
+        btnText.style.display = 'none';
+        btnIcon.style.display = 'none';
+        btnLoading.style.display = 'inline-flex';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+    });
+</script>
+{% endblock %}

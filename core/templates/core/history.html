@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Analysis History — SkillSync AI{% endblock %}
+
+{% block content %}
+<section class="history-section" id="history-section">
+    <div class="history-container">
+        <div class="history-header">
+            <h1 class="page-title">Analysis <span class="gradient-text">History</span></h1>
+            <p class="page-subtitle">View all your past resume analyses</p>
+            <a href="{% url 'upload' %}" class="btn btn-primary" id="new-analysis-top">
+                <span class="btn-icon">+</span> New Analysis
+            </a>
+        </div>
+        
+        {% if analyses %}
+        <div class="history-grid" id="history-grid">
+            {% for analysis in analyses %}
+            <div class="history-card glass-card" id="history-card-{{ analysis.id }}">
+                <div class="history-card-header">
+                    <div class="history-score-mini">
+                        <svg viewBox="0 0 36 36" class="mini-ring">
+                            <path class="mini-ring-bg" d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="mini-ring-fill" d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                stroke-dasharray="{{ analysis.overall_score }}, 100" />
+                        </svg>
+                        <span class="mini-score-text">{{ analysis.overall_score|floatformat:0 }}%</span>
+                    </div>
+                    <div class="history-meta">
+                        <h4 class="history-filename">{{ analysis.resume.original_filename }}</h4>
+                        <p class="history-date">{{ analysis.analyzed_at|date:"M d, Y • h:i A" }}</p>
+                    </div>
+                </div>
+                
+                {% if analysis.job_title %}
+                <p class="history-job-title">
+                    <span class="label-icon">💼</span> {{ analysis.job_title }}
+                </p>
+                {% endif %}
+                
+                <div class="history-category">
+                    <span class="category-badge category-{{ analysis.category }}">
+                        {{ analysis.get_category_display }}
+                    </span>
+                </div>
+                
+                <div class="history-skills-summary">
+                    <span class="matched-color">✅ {{ analysis.matched_skills|length }} matched</span>
+                    <span class="missing-color">❌ {{ analysis.missing_skills|length }} gaps</span>
+                </div>
+                
+                <div class="history-actions">
+                    <a href="{% url 'dashboard' analysis.id %}" class="btn btn-sm btn-primary" id="view-{{ analysis.id }}">
+                        View Details
+                    </a>
+                    <a href="{% url 'download_report' analysis.id %}" class="btn btn-sm btn-ghost" id="download-{{ analysis.id }}">
+                        📋 PDF
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state glass-card" id="empty-state">
+            <span class="empty-icon">📭</span>
+            <h3>No Analyses Yet</h3>
+            <p>Upload your first resume to get started!</p>
+            <a href="{% url 'upload' %}" class="btn btn-primary" id="first-analysis">
+                <span class="btn-icon">🚀</span>
+                Start First Analysis
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Animate cards on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('animate-in');
+                }, index * 100);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.history-card, .empty-state').forEach(el => {
+        observer.observe(el);
+    });
+</script>
+{% endblock %}
