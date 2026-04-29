@@ -4,6 +4,12 @@
 {% block title %}Analysis Dashboard — SkillSync AI{% endblock %}
 
 {% block content %}
+<div id="chart-data"
+     data-labels='{{ chart_labels|safe }}'
+     data-current='{{ chart_current|safe }}'
+     data-required='{{ chart_required|safe }}'
+     data-score='{{ overall_score }}'
+     style="display:none;"></div>
 <section class="dashboard-section" id="dashboard-section">
     <div class="dashboard-container">
         
@@ -196,11 +202,12 @@
 
 {% block extra_scripts %}
 <script>
-    // Chart data from Django context
-    const chartLabels = {{ chart_labels|safe }};
-    const chartCurrent = {{ chart_current|safe }};
-    const chartRequired = {{ chart_required|safe }};
-    const overallScore = {{ overall_score }};
+    // Chart data from HTML data attributes (avoids Django template linting errors)
+    const dataEl = document.getElementById('chart-data');
+    const chartLabels = JSON.parse(dataEl.dataset.labels || '[]');
+    const chartCurrent = JSON.parse(dataEl.dataset.current || '[]');
+    const chartRequired = JSON.parse(dataEl.dataset.required || '[]');
+    const overallScore = parseFloat(dataEl.dataset.score || '0');
     
     // Color Palette matching the CSS theme
     const colors = {
