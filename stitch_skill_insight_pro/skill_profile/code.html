@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkillAnalyzer - UI Design Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#343d96",
+                        "surface-container-highest": "#d5e3fc",
+                        "on-surface-variant": "#454652",
+                        "on-secondary-fixed": "#00201a",
+                        "surface-container-high": "#dce9ff",
+                        "surface-tint": "#4c56af",
+                        "surface-dim": "#ccdbf3",
+                        "surface-container": "#e6eeff",
+                        "outline": "#767683",
+                        "tertiary": "#00105a",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#233144",
+                        "tertiary-container": "#14267a",
+                        "secondary-fixed-dim": "#44ddc1",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed": "#e0e0ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface": "#0d1c2e",
+                        "surface-variant": "#d5e3fc",
+                        "on-secondary-fixed-variant": "#005145",
+                        "outline-variant": "#c6c5d4",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#1a237e",
+                        "surface": "#f8f9ff",
+                        "secondary-fixed": "#68fadd",
+                        "primary": "#000666",
+                        "secondary": "#006b5c",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#0d1c2e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-fixed": "#000767",
+                        "on-secondary-container": "#007261",
+                        "on-tertiary-fixed": "#00105b",
+                        "on-tertiary-container": "#8392ea",
+                        "inverse-primary": "#bdc2ff",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#bdc2ff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#bac3ff",
+                        "secondary-container": "#68fadd",
+                        "background": "#f8f9ff",
+                        "on-primary-container": "#8690ee",
+                        "on-tertiary-fixed-variant": "#2f3f92",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#dee0ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "16px",
+                        "base": "4px",
+                        "margin-mobile": "20px",
+                        "xs": "8px",
+                        "md": "24px",
+                        "xl": "48px",
+                        "gutter-mobile": "12px",
+                        "lg": "32px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .pulse-bar-gradient {
+            background: linear-gradient(90deg, #000666 0%, #006b5c 100%);
+        }
+        .skill-glow {
+            box-shadow: 0 4px 12px 0 rgba(0, 6, 102, 0.06);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface docked full-width top-0 z-50 flex justify-between items-center w-full px-margin-mobile py-base">
+<div class="flex items-center gap-sm">
+<img alt="User profile portrait" class="w-10 h-10 rounded-full object-cover" data-alt="A professional and clean studio portrait of a young professional with a friendly expression. The lighting is soft and even, characteristic of a high-end corporate headshot. The background is a muted, neutral grey that emphasizes the subject, aligning with a modern, professional light-mode aesthetic. The focus is sharp, capturing clear details of the facial features and attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM8vljkjqAROxSwS-3XG4TW6FbGPp2MZDe5XB7EplbLfX7XDtf8TVLe8wDVvebxDgn2DJdXRcqJPNgzJFpP4TBK_rt8eWBbVYtUWmSrEPq8oCz9Pn-Wd9mWqGeIPYjO4-oWZJzkAz9vJ6iDu8qsus_c81QQHFRdUg1k8047Zy3EJPKs_O1CSWtTEv-jsNR8zApR0e1xWdCmafj54o51tknQWRLnWhT3cs5JKJ9jwyk9Zv9khK2CHdVa6Y3YnY3wA7pkTK260RH3GCz"/>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SkillAnalyzer</h1>
+</div>
+<button class="material-symbols-outlined text-primary p-2 rounded-full hover:bg-surface-container transition-colors Active: scale-95 transition-transform duration-150">
+            notifications
+        </button>
+</header>
+<main class="px-margin-mobile mt-lg">
+<!-- Hero Section: Competency Identity -->
+<section class="mb-xl">
+<div class="flex flex-col gap-xs mb-md">
+<span class="font-label-caps text-label-caps text-secondary">COMPETENCY PROFILE</span>
+<h2 class="font-display-lg text-display-lg text-primary">UI Design</h2>
+</div>
+<!-- Level Indicator Card -->
+<div class="bg-surface-container-lowest rounded-xl p-lg skill-glow border border-outline-variant/20 flex items-center justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-base">CURRENT LEVEL</p>
+<p class="font-headline-md text-headline-md text-primary">Senior Specialist</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Top 5% of industry benchmark</p>
+</div>
+<div class="relative flex items-center justify-center w-24 h-24">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-container" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-secondary" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.2" stroke-dashoffset="50.24" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-headline-md text-headline-md text-secondary">80%</span>
+</div>
+</div>
+</section>
+<!-- Sub-skills Proficiency Grid (Bento Style) -->
+<section class="mb-xl">
+<div class="flex justify-between items-end mb-md">
+<h3 class="font-title-sm text-title-sm text-primary">Core Proficiencies</h3>
+<span class="font-body-sm text-body-sm text-secondary">View Analysis</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+<!-- Prototyping Card -->
+<div class="bg-surface-container-lowest rounded-xl p-sm skill-glow border border-outline-variant/10">
+<div class="flex justify-between items-center mb-md">
+<span class="font-body-md font-semibold text-on-surface">Prototyping</span>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container/20 px-xs py-1 rounded-full">EXPERT</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-[92%] pulse-bar-gradient rounded-full"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">High-fidelity interaction design &amp; motion logic.</p>
+</div>
+<!-- Visual Research Card -->
+<div class="bg-surface-container-lowest rounded-xl p-sm skill-glow border border-outline-variant/10">
+<div class="flex justify-between items-center mb-md">
+<span class="font-body-md font-semibold text-on-surface">Visual Research</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-xs py-1 rounded-full">ADVANCED</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-[78%] pulse-bar-gradient rounded-full"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Mood-boarding, typography scaling, and trend analysis.</p>
+</div>
+<!-- Design Systems Card -->
+<div class="bg-surface-container-lowest rounded-xl p-sm skill-glow border border-outline-variant/10">
+<div class="flex justify-between items-center mb-md">
+<span class="font-body-md font-semibold text-on-surface">Design Systems</span>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary-container/20 px-xs py-1 rounded-full">EXPERT</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-[88%] pulse-bar-gradient rounded-full"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Component atomization and documentation architecture.</p>
+</div>
+<!-- Accessibility Card -->
+<div class="bg-surface-container-lowest rounded-xl p-sm skill-glow border border-outline-variant/10">
+<div class="flex justify-between items-center mb-md">
+<span class="font-body-md font-semibold text-on-surface">Accessibility</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-xs py-1 rounded-full">INTERMEDIATE</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-[64%] pulse-bar-gradient rounded-full"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">WCAG compliance and screen-reader optimization.</p>
+</div>
+</div>
+</section>
+<!-- Recent Certifications Section -->
+<section class="mb-xl">
+<h3 class="font-title-sm text-title-sm text-primary mb-md">Recent Certifications</h3>
+<div class="flex flex-col gap-sm">
+<!-- Cert 1 -->
+<div class="flex gap-sm p-sm bg-surface-container-low rounded-xl items-center border border-outline-variant/10">
+<div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center skill-glow shrink-0">
+<span class="material-symbols-outlined text-secondary text-[32px]">verified</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-body-md font-bold text-on-surface">Advanced Figma Architecture</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Issued by DesignMasters Academy • 2024</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+<!-- Cert 2 -->
+<div class="flex gap-sm p-sm bg-surface-container-low rounded-xl items-center border border-outline-variant/10">
+<div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center skill-glow shrink-0">
+<span class="material-symbols-outlined text-secondary text-[32px]">workspace_premium</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-body-md font-bold text-on-surface">Interface Psychology</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cognitive UX Institute • 2023</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-gutter-mobile py-xs bg-surface-container-lowest shadow-lg rounded-t-xl">
+<!-- Dashboard Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Dashboard</span>
+</a>
+<!-- Profile Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</a>
+<!-- Analysis Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps mt-1">Analysis</span>
+</a>
+<!-- Learning Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-label-caps text-label-caps mt-1">Learning</span>
+</a>
+</nav>
+</body></html>

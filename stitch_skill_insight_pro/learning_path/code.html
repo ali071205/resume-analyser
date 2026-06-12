@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#343d96",
+                    "surface-container-highest": "#d5e3fc",
+                    "on-surface-variant": "#454652",
+                    "on-secondary-fixed": "#00201a",
+                    "surface-container-high": "#dce9ff",
+                    "surface-tint": "#4c56af",
+                    "surface-dim": "#ccdbf3",
+                    "surface-container": "#e6eeff",
+                    "outline": "#767683",
+                    "tertiary": "#00105a",
+                    "error": "#ba1a1a",
+                    "inverse-surface": "#233144",
+                    "tertiary-container": "#14267a",
+                    "secondary-fixed-dim": "#44ddc1",
+                    "surface-bright": "#f8f9ff",
+                    "primary-fixed": "#e0e0ff",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-surface": "#0d1c2e",
+                    "surface-variant": "#d5e3fc",
+                    "on-secondary-fixed-variant": "#005145",
+                    "outline-variant": "#c6c5d4",
+                    "surface-container-low": "#eff4ff",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#1a237e",
+                    "surface": "#f8f9ff",
+                    "secondary-fixed": "#68fadd",
+                    "primary": "#000666",
+                    "secondary": "#006b5c",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#0d1c2e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#000767",
+                    "on-secondary-container": "#007261",
+                    "on-tertiary-fixed": "#00105b",
+                    "on-tertiary-container": "#8392ea",
+                    "inverse-primary": "#bdc2ff",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#bac3ff",
+                    "secondary-container": "#68fadd",
+                    "background": "#f8f9ff",
+                    "on-primary-container": "#8690ee",
+                    "on-tertiary-fixed-variant": "#2f3f92",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#dee0ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "16px",
+                    "base": "4px",
+                    "margin-mobile": "20px",
+                    "xs": "8px",
+                    "md": "24px",
+                    "xl": "48px",
+                    "gutter-mobile": "12px",
+                    "lg": "32px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .pulse-gradient { background: linear-gradient(90deg, #000666 0%, #006b5c 100%); }
+        .shadow-soft { shadow: 0 4px 12px 0 rgba(0, 6, 102, 0.06); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-xl">
+<!-- TopAppBar -->
+<header class="bg-surface docked full-width top-0 z-50 flex justify-between items-center w-full px-margin-mobile py-base sticky">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-highest">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a mid-30s male with a kind expression, set against a clean, softly blurred modern office background. The lighting is bright and natural, reflecting a professional yet approachable corporate atmosphere. The color palette is composed of soft whites and subtle blue tones, maintaining a high-quality, professional diagnostic tool aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRbo_9QGE8Bhuqfz0yXhDDx35BFGdcjW8S8PTA9BwE4Lwk8hccUWjatSSzffDMr0f78i9zMdsxJKFHZRjVpGBfi7PVQIRghKKDiw_5TWV8LYEF-4wUZHDvx9yYSuoInhT8hxJdB2PR9oTXqO73JI4TgZFWte4hSsAJSHWRszl7ghBiwlmJ1AlWaVpnyF-JWQ0W998uL7e2_2SOZcRoJJMoYDVqvn5rYq29OzNtF6A2DLomEdeMIFUgda4opeJy7x2ghBgKn0Fnx7JW"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SkillAnalyzer</h1>
+</div>
+<button class="material-symbols-outlined text-primary p-2 hover:bg-surface-container transition-colors rounded-full Active: scale-95 transition-transform duration-150" data-icon="notifications">notifications</button>
+</header>
+<main class="flex flex-col gap-xl mt-md px-margin-mobile">
+<!-- Hero Section -->
+<section class="flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-secondary">YOUR PROGRESS</span>
+<h2 class="font-display-lg text-display-lg text-on-surface">Level up your <span class="text-primary">Data Science</span> path</h2>
+<div class="mt-base flex items-center gap-sm bg-surface-container-low p-sm rounded-xl border border-outline-variant/30 shadow-sm">
+<div class="flex-1">
+<div class="flex justify-between items-end mb-xs">
+<p class="font-body-sm text-on-surface-variant">Daily Goal: 45m</p>
+<p class="font-label-caps text-label-caps text-primary">32m / 45m</p>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full pulse-gradient w-[72%] rounded-full shadow-[0_0_8px_rgba(0,107,92,0.4)]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended Courses (Horizontal Scroll) -->
+<section class="flex flex-col gap-sm -mr-margin-mobile">
+<div class="flex justify-between items-center pr-margin-mobile">
+<h3 class="font-title-sm text-title-sm text-on-surface">Recommended Courses</h3>
+<span class="font-label-caps text-label-caps text-secondary cursor-pointer">VIEW ALL</span>
+</div>
+<div class="flex overflow-x-auto gap-sm no-scrollbar pb-base pr-margin-mobile">
+<!-- Course Card 1 -->
+<div class="min-w-[280px] bg-surface-container-lowest rounded-xl shadow-soft overflow-hidden border border-outline-variant/10 flex-shrink-0 hover:shadow-lg transition-all duration-300">
+<div class="h-32 bg-primary relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A clean, high-tech data visualization interface with glowing teal and deep indigo charts on a dark screen. The scene conveys precision and professional diagnostic depth, featuring abstract floating nodes and lines of code. Soft ambient lighting highlights the edges of a modern workspace environment with a crisp, corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMkHQOs4leOqdDNELT8UEBIQzTyUy6LTu6kq1WA3i5_3nWO8NoMipey8bdQVEfWA_0a1XCOpqZ4nAZ_pN-BG3QA2S33T_bYYYefzqTzzczLE3YafbMBoK-HrgNgDOqI0o70G_fQhXdCSS8u46qxnT7Luc2M5-E3l2v-D7SfCrN1khFXQnzlx5QElaED4CpNyHKwGjdbFne4GQIVh_XTDjsEdB4nu5OyRdi1R7Z7JtsQhR_OOSJCPFttGCfW9aUIRry2cKhJq_nXWBq"/>
+<div class="absolute top-sm left-sm bg-secondary-container text-on-secondary-container px-xs py-1 rounded-full font-label-caps text-[10px]">
+                            DATA ANALYSIS
+                        </div>
+</div>
+<div class="p-sm flex flex-col gap-xs">
+<h4 class="font-title-sm text-title-sm text-on-surface line-clamp-1">Advanced SQL for Insights</h4>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+<span class="font-body-sm text-body-sm">4h 20m</span>
+<span class="mx-1">•</span>
+<span class="font-body-sm text-body-sm text-secondary font-semibold">+12 pts</span>
+</div>
+</div>
+</div>
+<!-- Course Card 2 -->
+<div class="min-w-[280px] bg-surface-container-lowest rounded-xl shadow-soft overflow-hidden border border-outline-variant/10 flex-shrink-0 hover:shadow-lg transition-all duration-300">
+<div class="h-32 bg-primary relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="An intricate neural network visualization represented by glowing blue filaments and interconnected nodes on a clean white background. The aesthetic is extremely modern and minimalist, utilizing electric teal accents to indicate active data processing. The image creates a sense of high-performance intelligence and career-focused technological advancement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt-a9E1wsL7cdK52hnbnIA6IQFecDp8bVB7zVkeX3cxZS5DFiifQIkGwbOlhm-o-v_ohDeYAr7n8wqWf6K25IRwqJyYEje_5f89t2gP_jvofsme2tThATuR_yTte3UGqu0cPnBvC5uNqECy7SGgGFrnJfCokB-mBPj49LqcbduEGyNdn48KVvDXXnyzDt1PJz-gOmvkwoCgcWuDdsb8KAC-8IizTjUezBFTf-iKsRrPusI9mitiFQxuIImCev_BynZTPnL63My2MJA"/>
+<div class="absolute top-sm left-sm bg-secondary-container text-on-secondary-container px-xs py-1 rounded-full font-label-caps text-[10px]">
+                            AI &amp; ML
+                        </div>
+</div>
+<div class="p-sm flex flex-col gap-xs">
+<h4 class="font-title-sm text-title-sm text-on-surface line-clamp-1">Neural Network Basics</h4>
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="schedule">schedule</span>
+<span class="font-body-sm text-body-sm">6h 15m</span>
+<span class="mx-1">•</span>
+<span class="font-body-sm text-body-sm text-secondary font-semibold">+24 pts</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Daily Micro-tasks (Vertical List) -->
+<section class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm text-on-surface">Daily Micro-tasks</h3>
+<span class="font-label-caps text-label-caps text-outline">2/5 DONE</span>
+</div>
+<div class="flex flex-col gap-xs">
+<!-- Task 1 -->
+<div class="flex items-center gap-sm bg-surface-container-lowest p-sm rounded-xl border border-outline-variant/20 shadow-soft">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+</div>
+<div class="flex-1">
+<h5 class="font-title-sm text-[16px] text-on-surface">Data Privacy Quiz</h5>
+<p class="font-body-sm text-on-surface-variant text-[12px]">5 min • Knowledge check</p>
+</div>
+<button class="bg-secondary text-on-secondary px-sm py-1 rounded-full font-label-caps text-[11px] uppercase tracking-wider">START</button>
+</div>
+<!-- Task 2 -->
+<div class="flex items-center gap-sm bg-surface-container-lowest p-sm rounded-xl border border-outline-variant/20 shadow-soft opacity-60">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+</div>
+<div class="flex-1">
+<h5 class="font-title-sm text-[16px] text-on-surface">Review Python Syntax</h5>
+<p class="font-body-sm text-on-surface-variant text-[12px]">10 min • Review</p>
+</div>
+<span class="material-symbols-outlined text-secondary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</section>
+<!-- Mentor Suggestions (Bento Style) -->
+<section class="flex flex-col gap-sm">
+<h3 class="font-title-sm text-title-sm text-on-surface">Mentor Suggestions</h3>
+<div class="grid grid-cols-2 gap-sm">
+<!-- Suggestion 1 -->
+<div class="col-span-2 bg-primary-container p-sm rounded-xl text-on-primary-container flex flex-col gap-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-primary-container/80" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-caps text-label-caps opacity-80">AI MENTOR</span>
+</div>
+<span class="font-label-caps text-label-caps bg-on-primary-container/20 px-2 py-0.5 rounded">NEW TIP</span>
+</div>
+<p class="font-body-md text-on-primary-container leading-tight">"Focus on **Visual Storytelling** to increase your impact during executive presentations."</p>
+<div class="flex gap-xs mt-base">
+<span class="bg-primary px-xs py-1 rounded font-body-sm text-[12px] text-primary-fixed">Skill Gain: Communication</span>
+</div>
+</div>
+<!-- Suggestion 2 -->
+<div class="bg-surface-container-high p-sm rounded-xl border border-outline-variant/20 flex flex-col gap-base">
+<div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary mb-xs">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">NEXT GOAL</p>
+<p class="font-title-sm text-[15px] text-on-surface">Lead a Team Sprint</p>
+</div>
+<!-- Suggestion 3 -->
+<div class="bg-surface-container-high p-sm rounded-xl border border-outline-variant/20 flex flex-col gap-base">
+<div class="w-8 h-8 rounded-lg bg-surface-container-lowest flex items-center justify-center text-secondary mb-xs">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant">CERTIFICATION</p>
+<p class="font-title-sm text-[15px] text-on-surface">GCP Architect Prep</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-gutter-mobile py-xs bg-surface-container-lowest docked full-width rounded-t-xl shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-label-caps text-label-caps mt-1">Profile</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps text-label-caps mt-1">Analysis</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 Active: scale-90 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="auto_stories" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-label-caps text-label-caps mt-1">Learning</span>
+</div>
+</nav>
+</body></html>

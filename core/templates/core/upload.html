@@ -1,162 +1,83 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Upload Resume — SkillSync AI{% endblock %}
+{% block title %}Analyze Your Resume - SkillSync AI{% endblock %}
 
 {% block content %}
-<section class="upload-section" id="upload-section">
-    <div class="upload-container">
-        <div class="upload-header">
-            <h1 class="page-title">Analyze Your <span class="gradient-text">Resume</span></h1>
-            <p class="page-subtitle">Upload your resume and paste the job description to get an AI-powered analysis</p>
-        </div>
-        
-        <form method="post" enctype="multipart/form-data" class="upload-form glass-card" id="upload-form">
-            {% csrf_token %}
-            
-            <!-- File Upload Zone -->
-            <div class="form-group">
-                <label class="form-label" for="resume-file-input">
-                    <span class="label-icon">📄</span>
-                    Resume File
-                </label>
-                <div class="dropzone" id="dropzone">
-                    <div class="dropzone-content">
-                        <span class="dropzone-icon">📁</span>
-                        <p class="dropzone-text">
-                            <strong>Drag & drop</strong> your resume here, or 
-                            <span class="dropzone-browse">browse</span>
-                        </p>
-                        <p class="dropzone-hint">PDF or DOCX • Max 10MB</p>
-                    </div>
-                    <div class="dropzone-preview" id="dropzone-preview" style="display: none;">
-                        <span class="preview-icon">✅</span>
-                        <span class="preview-name" id="preview-filename"></span>
-                        <button type="button" class="preview-remove" id="preview-remove">✕</button>
-                    </div>
-                    {{ form.resume_file }}
-                </div>
-                {% if form.resume_file.errors %}
-                <div class="form-error">{{ form.resume_file.errors.0 }}</div>
-                {% endif %}
-            </div>
-            
-            <!-- Job Title -->
-            <div class="form-group">
-                <label class="form-label" for="job-title-input">
-                    <span class="label-icon">💼</span>
-                    Job Title <span class="label-optional">(Optional)</span>
-                </label>
-                {{ form.job_title }}
-                {% if form.job_title.errors %}
-                <div class="form-error">{{ form.job_title.errors.0 }}</div>
-                {% endif %}
-            </div>
-            
-            <!-- Job Description -->
-            <div class="form-group">
-                <label class="form-label" for="job-description-input">
-                    <span class="label-icon">📝</span>
-                    Job Description
-                </label>
-                {{ form.job_description }}
-                {% if form.job_description.errors %}
-                <div class="form-error">{{ form.job_description.errors.0 }}</div>
-                {% endif %}
-            </div>
-            
-            <!-- Submit -->
-            <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
-                <span class="btn-icon">🤖</span>
-                <span class="btn-text">Analyze with AI</span>
-                <span class="btn-loading" style="display: none;">
-                    <span class="spinner"></span>
-                    Analyzing...
-                </span>
-            </button>
-            
-            <p class="form-note">
-                ⚡ Analysis typically takes 10-20 seconds depending on resume complexity.
-            </p>
-        </form>
-    </div>
+<section class="mb-lg">
+    <h1 class="font-display-lg text-display-lg text-primary mb-xs">Analyze Your Resume</h1>
+    <p class="font-body-md text-body-md text-on-surface-variant max-w-md">Upload your resume and provide a job description to get an AI-powered gap analysis.</p>
 </section>
-{% endblock %}
 
-{% block extra_scripts %}
-<script>
-    // Drag & Drop functionality
-    const dropzone = document.getElementById('dropzone');
-    const fileInput = document.getElementById('resume-file-input');
-    const preview = document.getElementById('dropzone-preview');
-    const previewName = document.getElementById('preview-filename');
-    const previewRemove = document.getElementById('preview-remove');
-    const dropContent = dropzone.querySelector('.dropzone-content');
-    
-    // Click to browse
-    dropzone.addEventListener('click', (e) => {
-        if (e.target !== previewRemove && !e.target.closest('.preview-remove')) {
-            fileInput.click();
-        }
-    });
-    
-    // Drag events
-    ['dragenter', 'dragover'].forEach(event => {
-        dropzone.addEventListener(event, (e) => {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
-        });
-    });
-    
-    ['dragleave', 'drop'].forEach(event => {
-        dropzone.addEventListener(event, (e) => {
-            e.preventDefault();
-            dropzone.classList.remove('dragover');
-        });
-    });
-    
-    dropzone.addEventListener('drop', (e) => {
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            fileInput.files = files;
-            showPreview(files[0]);
-        }
-    });
-    
-    // File input change
-    fileInput.addEventListener('change', () => {
-        if (fileInput.files.length > 0) {
-            showPreview(fileInput.files[0]);
-        }
-    });
-    
-    function showPreview(file) {
-        previewName.textContent = file.name;
-        dropContent.style.display = 'none';
-        preview.style.display = 'flex';
-    }
-    
-    previewRemove.addEventListener('click', (e) => {
-        e.stopPropagation();
-        fileInput.value = '';
-        dropContent.style.display = 'flex';
-        preview.style.display = 'none';
-    });
-    
-    // Form submit loading state
-    const form = document.getElementById('upload-form');
-    const submitBtn = document.getElementById('submit-btn');
-    
-    form.addEventListener('submit', () => {
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnLoading = submitBtn.querySelector('.btn-loading');
-        const btnIcon = submitBtn.querySelector('.btn-icon');
+<div class="bg-surface-container-lowest rounded-2xl p-md md:p-lg border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,6,102,0.04)] mb-xl">
+    <form method="post" enctype="multipart/form-data" class="space-y-md">
+        {% csrf_token %}
         
-        btnText.style.display = 'none';
-        btnIcon.style.display = 'none';
-        btnLoading.style.display = 'inline-flex';
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
+        <!-- File Upload Area -->
+        <div>
+            <label class="font-label-caps text-label-caps text-outline uppercase mb-2 block">Resume File (PDF/DOCX)</label>
+            <div id="drop-zone" class="relative border-2 border-dashed border-outline-variant rounded-2xl p-lg text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer group">
+                <input type="file" name="resume_file" id="resume_file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".pdf,.docx" required>
+                <div class="space-y-2">
+                    <div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined text-primary text-3xl">upload_file</span>
+                    </div>
+                    <p class="font-title-sm text-title-sm text-on-surface" id="file-name">Drag & drop or click to browse</p>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Max 10MB • Supports PDF & Word</p>
+                </div>
+            </div>
+            {% if form.resume_file.errors %}
+                <p class="text-error text-xs mt-1">{{ form.resume_file.errors.0 }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Job Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+            <div>
+                <label for="job_title" class="font-label-caps text-label-caps text-outline uppercase mb-2 block">Target Job Title (Optional)</label>
+                <input type="text" name="job_title" id="job_title" placeholder="e.g. Senior Python Developer" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+            </div>
+            <div>
+                <label for="job_description" class="font-label-caps text-label-caps text-outline uppercase mb-2 block">Job Description</label>
+                <textarea name="job_description" id="job_description" rows="5" placeholder="Paste the job requirements here..." class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none" required></textarea>
+            </div>
+        </div>
+
+        <div class="pt-sm">
+            <button type="submit" id="analyze-btn" class="w-full md:w-auto bg-primary text-white font-bold px-xl py-sm rounded-full shadow-lg hover:shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-xs">
+                <span>Start Analysis</span>
+                <span class="material-symbols-outlined" id="btn-icon">rocket_launch</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div id="loading-overlay" class="hidden fixed inset-0 z-[60] bg-white/80 backdrop-blur-sm flex items-center justify-center">
+    <div class="text-center space-y-md p-lg">
+        <div class="relative w-24 h-24 mx-auto">
+            <div class="absolute inset-0 border-4 border-primary/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-primary rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <h2 class="font-headline-md text-headline-md text-primary">Analyzing Resume...</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant animate-pulse">Our AI is extracting skills and comparing them to the JD</p>
+    </div>
+</div>
+
+<script>
+    const fileInput = document.getElementById('resume_file');
+    const fileName = document.getElementById('file-name');
+    const form = document.querySelector('form');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            fileName.textContent = e.target.files[0].name;
+            fileName.classList.add('text-primary', 'font-bold');
+        }
+    });
+
+    form.addEventListener('submit', () => {
+        loadingOverlay.classList.remove('hidden');
     });
 </script>
 {% endblock %}

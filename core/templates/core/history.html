@@ -1,100 +1,67 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Analysis History — SkillSync AI{% endblock %}
+{% block title %}Analysis History - SkillSync AI{% endblock %}
 
 {% block content %}
-<section class="history-section" id="history-section">
-    <div class="history-container">
-        <div class="history-header">
-            <h1 class="page-title">Analysis <span class="gradient-text">History</span></h1>
-            <p class="page-subtitle">View all your past resume analyses</p>
-            <a href="{% url 'upload' %}" class="btn btn-primary" id="new-analysis-top">
-                <span class="btn-icon">+</span> New Analysis
-            </a>
+<section class="mb-lg">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-sm">
+        <div>
+            <h1 class="font-display-lg text-display-lg text-primary">History</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Your past resume analyses and career progress.</p>
         </div>
-        
-        {% if analyses %}
-        <div class="history-grid" id="history-grid">
-            {% for analysis in analyses %}
-            <div class="history-card glass-card" id="history-card-{{ analysis.id }}">
-                <div class="history-card-header">
-                    <div class="history-score-mini">
-                        <svg viewBox="0 0 36 36" class="mini-ring">
-                            <path class="mini-ring-bg" d="M18 2.0845
-                                a 15.9155 15.9155 0 0 1 0 31.831
-                                a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path class="mini-ring-fill" d="M18 2.0845
-                                a 15.9155 15.9155 0 0 1 0 31.831
-                                a 15.9155 15.9155 0 0 1 0 -31.831"
-                                stroke-dasharray="{{ analysis.overall_score }}, 100" />
-                        </svg>
-                        <span class="mini-score-text">{{ analysis.overall_score|floatformat:0 }}%</span>
-                    </div>
-                    <div class="history-meta">
-                        <h4 class="history-filename">{{ analysis.resume.original_filename }}</h4>
-                        <p class="history-date">{{ analysis.analyzed_at|date:"M d, Y • h:i A" }}</p>
-                    </div>
-                </div>
-                
-                {% if analysis.job_title %}
-                <p class="history-job-title">
-                    <span class="label-icon">💼</span> {{ analysis.job_title }}
-                </p>
-                {% endif %}
-                
-                <div class="history-category">
-                    <span class="category-badge category-{{ analysis.category }}">
-                        {{ analysis.get_category_display }}
-                    </span>
-                </div>
-                
-                <div class="history-skills-summary">
-                    <span class="matched-color">✅ {{ analysis.matched_skills|length }} matched</span>
-                    <span class="missing-color">❌ {{ analysis.missing_skills|length }} gaps</span>
-                </div>
-                
-                <div class="history-actions">
-                    <a href="{% url 'dashboard' analysis.id %}" class="btn btn-sm btn-primary" id="view-{{ analysis.id }}">
-                        View Details
-                    </a>
-                    <a href="{% url 'download_report' analysis.id %}" class="btn btn-sm btn-ghost" id="download-{{ analysis.id }}">
-                        📋 PDF
-                    </a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="empty-state glass-card" id="empty-state">
-            <span class="empty-icon">📭</span>
-            <h3>No Analyses Yet</h3>
-            <p>Upload your first resume to get started!</p>
-            <a href="{% url 'upload' %}" class="btn btn-primary" id="first-analysis">
-                <span class="btn-icon">🚀</span>
-                Start First Analysis
-            </a>
-        </div>
-        {% endif %}
+        <a href="{% url 'upload' %}" class="bg-primary text-white font-bold px-md py-2 rounded-full shadow-lg hover:shadow-primary/20 transition-all flex items-center gap-xs text-sm">
+            <span class="material-symbols-outlined text-sm">add</span>
+            <span>New Analysis</span>
+        </a>
     </div>
 </section>
-{% endblock %}
 
-{% block extra_scripts %}
-<script>
-    // Animate cards on scroll
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.classList.add('animate-in');
-                }, index * 100);
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.history-card, .empty-state').forEach(el => {
-        observer.observe(el);
-    });
-</script>
+<div class="grid grid-cols-1 gap-sm">
+    {% for analysis in analyses %}
+    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant/10 shadow-sm hover:border-primary/20 transition-all flex flex-col md:flex-row md:items-center justify-between gap-md group">
+        <div class="flex items-center gap-md">
+            <div class="w-12 h-12 rounded-xl bg-primary/5 text-primary flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">description</span>
+            </div>
+            <div>
+                <h3 class="font-title-sm text-base text-on-surface group-hover:text-primary transition-colors">
+                    {{ analysis.resume.original_filename|truncatechars:30 }}
+                </h3>
+                <div class="flex items-center gap-3 mt-1">
+                    <span class="text-xs font-bold text-outline-variant uppercase">{{ analysis.get_category_display }}</span>
+                    <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+                    <span class="text-xs text-on-surface-variant">{{ analysis.analyzed_at|date:"M d, Y" }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between md:justify-end gap-lg">
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-outline uppercase mb-1">Match Score</p>
+                <div class="flex items-center gap-2">
+                    <div class="h-1.5 w-20 bg-surface-container rounded-full overflow-hidden hidden md:block">
+                        <div class="h-full bg-primary rounded-full" style="width: {{ analysis.overall_score }}%"></div>
+                    </div>
+                    <span class="font-bold text-primary">{{ analysis.overall_score|floatformat:0 }}%</span>
+                </div>
+            </div>
+            <a href="{% url 'dashboard' analysis.id %}" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all active:scale-90">
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-xl bg-surface-container-lowest rounded-3xl border border-dashed border-outline-variant/30">
+        <div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-md opacity-50">
+            <span class="material-symbols-outlined text-3xl">history</span>
+        </div>
+        <h3 class="font-title-sm text-on-surface mb-2">No history yet</h3>
+        <p class="font-body-sm text-on-surface-variant mb-lg max-w-xs mx-auto">Start your first analysis to see your skill gaps and learning recommendations.</p>
+        <a href="{% url 'upload' %}" class="inline-flex bg-primary text-white font-bold px-lg py-sm rounded-full shadow-lg hover:shadow-primary/20 transition-all">
+            Analyze Resume
+        </a>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

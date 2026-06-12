@@ -62,7 +62,7 @@ def upload_view(request):
                 # Check if AI analysis actually succeeded
                 feedback = result.get('detailed_feedback', '')
                 if result.get('overall_score', 0) == 0 and ('error' in feedback.lower() or 'could not' in feedback.lower() or 'rate-limited' in feedback.lower()):
-                    messages.error(request, 'AI analysis failed due to API rate limits. Please wait 1 minute and try again.')
+                    messages.error(request, f'AI Error: {feedback}')
                     resume.delete()  # Clean up the failed upload
                     return redirect('upload')
                 

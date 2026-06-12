@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Space+Grotesk:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#92001c",
+                    "tertiary": "#000000",
+                    "on-tertiary-container": "#808489",
+                    "surface-container": "#f1edec",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed-variant": "#43474c",
+                    "secondary-fixed": "#ffdad8",
+                    "secondary-fixed-dim": "#ffb3b1",
+                    "primary-fixed": "#e5e2e1",
+                    "on-background": "#1c1b1b",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "surface-dim": "#ddd9d8",
+                    "on-surface-variant": "#444748",
+                    "primary": "#000000",
+                    "surface": "#fdf8f8",
+                    "on-error": "#ffffff",
+                    "secondary": "#b7102a",
+                    "secondary-container": "#db313f",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e5e2e1",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#313030",
+                    "tertiary-fixed": "#e0e3e8",
+                    "on-primary-fixed-variant": "#474646",
+                    "on-surface": "#1c1b1b",
+                    "surface-tint": "#5f5e5e",
+                    "background": "#fdf8f8",
+                    "surface-bright": "#fdf8f8",
+                    "outline": "#747878",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#858383",
+                    "tertiary-container": "#181c20",
+                    "on-secondary-fixed": "#410007",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#ebe7e6",
+                    "surface-container-low": "#f7f3f2",
+                    "on-tertiary-fixed": "#181c20",
+                    "outline-variant": "#c4c7c7",
+                    "inverse-primary": "#c8c6c5",
+                    "primary-container": "#1c1b1b",
+                    "on-primary-fixed": "#1c1b1b",
+                    "inverse-on-surface": "#f4f0ef",
+                    "on-secondary-container": "#fffbff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#e5e2e1",
+                    "tertiary-fixed-dim": "#c3c7cc"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "xl": "48px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "container-max": "1440px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "h2": ["Inter"],
+                    "label-caps": ["Space Grotesk"],
+                    "h3": ["Inter"],
+                    "h1": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "mono-data": ["Space Grotesk"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                    "h3": ["24px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "600"}],
+                    "h1": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "mono-data": ["14px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .radar-grid { stroke: #DEE2E6; stroke-width: 1; fill: none; }
+        .radar-axis { stroke: #DEE2E6; stroke-width: 1; }
+        .radar-area-required { fill: rgba(15, 15, 15, 0.1); stroke: #0F0F0F; stroke-width: 2; }
+        .radar-area-user { fill: rgba(230, 57, 70, 0.2); stroke: #E63946; stroke-width: 2; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface border-b border-outline-variant flex justify-between items-center w-full px-md h-16 sticky top-0 z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">menu</span>
+<h1 class="font-h3 text-h3 font-bold text-primary tracking-tight">SkillSync AI</h1>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmgvChEXGnqJF_4QItktYCIohzutX6o5A4q3CXrrXISP8SjvhiIw7PeUc0aPhanwbFWHJcqUJIYKXi0RcANoxpT95FlvN6xkf1VMiqmPfTtmoybHXWjb9NrvU01E_Vt2lbhnortcKR1QskOz85FmSe706JlE8_NLRVhOXMU6ARuzvItpgmckawy6TQm_1RyAzkaBxzZOtGVzQkcW4ICnQbMbtXl2TMwbvsyJCMiscj7UcDwh0xZD5Il2PzBueiZ5DIZsjpYjNY065O"/>
+</div>
+</header>
+<main class="max-w-md mx-auto px-md py-lg space-y-xl">
+<!-- Section 1: Match Score Ring -->
+<section class="flex flex-col items-center">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle class="text-surface-container-highest" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-width="8"></circle>
+<!-- Progress Circle -->
+<circle class="text-secondary" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="282.7" stroke-dashoffset="50.88" stroke-linecap="butt" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-xs">ANALYSIS COMPLETE</span>
+<span class="font-h1 text-h1 font-extrabold text-primary">82%</span>
+<span class="font-body-sm text-body-sm font-bold text-secondary">MATCH SCORE</span>
+</div>
+</div>
+<p class="mt-md text-center font-body-md text-on-surface-variant max-w-xs mx-auto">
+                Your profile closely aligns with the <span class="text-primary font-bold">Senior Product Lead</span> requirements.
+            </p>
+</section>
+<!-- Section 2: Skill Breakdown (Radar Chart) -->
+<section class="border border-outline-variant p-md bg-surface-container-lowest">
+<div class="flex justify-between items-center mb-md border-b border-outline-variant pb-sm">
+<h2 class="font-h3 text-h3 font-bold text-primary">Skill Breakdown</h2>
+<span class="material-symbols-outlined text-on-surface-variant">insights</span>
+</div>
+<div class="w-full aspect-square relative flex items-center justify-center">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 100 100">
+<!-- Web Grids -->
+<polygon class="radar-grid" points="50,10 88,35 88,75 50,90 12,75 12,35"></polygon>
+<polygon class="radar-grid" points="50,25 74,40 74,70 50,80 26,70 26,40"></polygon>
+<polygon class="radar-grid" points="50,40 58,45 58,65 50,70 42,65 42,45"></polygon>
+<!-- Axes -->
+<line class="radar-axis" x1="50" x2="50" y1="50" y2="10"></line>
+<line class="radar-axis" x1="50" x2="88" y1="50" y2="35"></line>
+<line class="radar-axis" x1="50" x2="88" y1="50" y2="75"></line>
+<line class="radar-axis" x1="50" x2="50" y1="50" y2="90"></line>
+<line class="radar-axis" x1="50" x2="12" y1="50" y2="75"></line>
+<line class="radar-axis" x1="50" x2="12" y1="50" y2="35"></line>
+<!-- Required Skills Area -->
+<polygon class="radar-area-required" points="50,10 88,35 88,75 50,90 12,75 12,35"></polygon>
+<!-- User Skills Area -->
+<polygon class="radar-area-user" points="50,20 80,45 60,65 50,85 15,65 25,40"></polygon>
+<!-- Labels (Conceptual positioning) -->
+<text class="font-label-caps text-[6px] fill-on-surface-variant" text-anchor="middle" x="50" y="5">STRATEGY</text>
+<text class="font-label-caps text-[6px] fill-on-surface-variant" text-anchor="start" x="92" y="35">TECHNICAL</text>
+<text class="font-label-caps text-[6px] fill-on-surface-variant" text-anchor="start" x="92" y="78">LEADERSHIP</text>
+<text class="font-label-caps text-[6px] fill-on-surface-variant" text-anchor="middle" x="50" y="96">ANALYTICS</text>
+<text class="font-label-caps text-[6px] fill-on-surface-variant" text-anchor="end" x="8" y="78">DESIGN</text>
+<text class="font-label-caps text-[6px] fill-on-surface-variant" text-anchor="end" x="8" y="35">COMMUNICATION</text>
+</svg>
+</div>
+<div class="mt-lg flex justify-center gap-md">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 bg-tertiary"></div>
+<span class="font-label-caps text-label-caps">REQUIRED</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 bg-secondary"></div>
+<span class="font-label-caps text-label-caps">YOUR SKILLS</span>
+</div>
+</div>
+</section>
+<!-- Section 3: Matched & Missing Skills -->
+<section class="space-y-md">
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-sm">MATCHED SKILLS</h3>
+<div class="flex flex-wrap gap-xs">
+<span class="px-sm py-1 border-2 border-primary bg-primary text-on-primary font-mono-data text-body-sm">Product Strategy</span>
+<span class="px-sm py-1 border-2 border-primary bg-primary text-on-primary font-mono-data text-body-sm">User Research</span>
+<span class="px-sm py-1 border-2 border-primary bg-primary text-on-primary font-mono-data text-body-sm">Agile Methodology</span>
+<span class="px-sm py-1 border-2 border-primary bg-primary text-on-primary font-mono-data text-body-sm">SQL</span>
+<span class="px-sm py-1 border-2 border-primary bg-primary text-on-primary font-mono-data text-body-sm">Team Leadership</span>
+</div>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-sm">MISSING SKILLS</h3>
+<div class="flex flex-wrap gap-xs">
+<span class="px-sm py-1 border-2 border-secondary text-secondary font-mono-data text-body-sm">Python Modeling</span>
+<span class="px-sm py-1 border-2 border-secondary text-secondary font-mono-data text-body-sm">Financial Forecasting</span>
+<span class="px-sm py-1 border-2 border-secondary text-secondary font-mono-data text-body-sm">Cloud Architecture</span>
+</div>
+</div>
+</section>
+<!-- Section 4: AI Recommendations -->
+<section class="border-2 border-primary p-md bg-white">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary" data-weight="fill">auto_awesome</span>
+<h2 class="font-h3 text-h3 font-bold text-primary">AI Recommendations</h2>
+</div>
+<ul class="space-y-md">
+<li class="flex gap-sm items-start">
+<span class="mt-1.5 w-1.5 h-1.5 bg-secondary flex-shrink-0"></span>
+<p class="font-body-md text-on-surface">Enhance your <span class="font-bold">Python Modeling</span> skills to reach a 90% match for Fintech roles.</p>
+</li>
+<li class="flex gap-sm items-start">
+<span class="mt-1.5 w-1.5 h-1.5 bg-secondary flex-shrink-0"></span>
+<p class="font-body-md text-on-surface">Your <span class="font-bold">Leadership</span> score is exceptional; highlight recent team expansion projects in your summary.</p>
+</li>
+<li class="flex gap-sm items-start">
+<span class="mt-1.5 w-1.5 h-1.5 bg-secondary flex-shrink-0"></span>
+<p class="font-body-md text-on-surface">Quantify your <span class="font-bold">Agile Methodology</span> experience with specific sprint efficiency metrics.</p>
+</li>
+</ul>
+</section>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full p-md bg-surface/80 backdrop-blur-sm z-50 border-t border-outline-variant md:hidden">
+<button class="w-full bg-secondary text-on-secondary font-label-caps text-label-caps h-14 flex items-center justify-center gap-sm transition-transform active:scale-95 shadow-lg">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+            DOWNLOAD PDF REPORT
+        </button>
+</div>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="fixed bottom-0 left-0 w-full z-40 flex justify-around items-center h-20 bg-surface border-t border-outline-variant px-lg md:hidden invisible">
+<!-- Placeholder for Nav logic if needed, currently prioritized the primary action button -->
+</nav>
+<!-- Shared Bottom Navigation Structure -->
+<div class="fixed bottom-0 left-0 w-full h-20 bg-surface border-t border-outline-variant flex justify-around items-center px-lg md:hidden hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1">
+<span class="material-symbols-outlined">upload_file</span>
+<span class="font-label-caps text-label-caps">Upload</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary border-t-2 border-secondary pt-1">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">History</span>
+</div>
+</div>
+<!-- Desktop Sidebar Placeholder (Hidden on Mobile) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-16 h-[calc(100vh-64px)] w-64 border-r border-outline-variant bg-surface-container-low p-md">
+<nav class="space-y-sm">
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">upload_file</span>
+<span class="font-label-caps text-label-caps">Upload</span>
+</a>
+<a class="flex items-center gap-md p-sm text-primary font-bold bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard_customize</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-md p-sm text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">History</span>
+</a>
+</nav>
+</aside>
+</body></html>

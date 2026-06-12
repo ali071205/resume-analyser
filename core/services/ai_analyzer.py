@@ -5,7 +5,11 @@ Performs skill extraction, gap analysis, scoring, classification, and recommenda
 
 import json
 import re
-from google import genai
+try:
+    from google import genai
+except ImportError:
+    genai = None
+
 from django.conf import settings
 
 
@@ -14,31 +18,36 @@ class SkillAnalyzer:
     AI-powered resume analysis engine using Google Gemini API (new google-genai SDK).
     """
 
-    # Try multiple models in order — if one is rate-limited, fall back to the next
+    # Using latest 2026 models found in user's account
     MODELS = [
-        "models/gemini-2.5-flash-lite",
-        "models/gemini-2.5-flash",
-        "models/gemini-3-flash-preview",
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-flash-latest",
+        "gemini-pro-latest",
     ]
 
     def __init__(self):
         """Initialize the Gemini client."""
-        self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
+        if genai is not None:
+            self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
     def analyze_resume(self, resume_text, job_description, job_title=""):
         """
         Complete analysis pipeline with automatic model fallback.
         """
+        if genai is None:
+            return self._get_fallback_result("The 'google-genai' library is not installed. Please run: pip install google-genai")
+
         prompt = self._build_prompt(resume_text, job_description, job_title)
 
-        # Try each model until one works
-        last_error = None
+        errors = []
         for model_name in self.MODELS:
             try:
                 response = self.client.models.generate_content(
                     model=model_name,
                     contents=prompt,
                 )
+                
                 result_text = response.text.strip()
 
                 # Clean up markdown code blocks if present
@@ -47,22 +56,20 @@ class SkillAnalyzer:
                 result_text = re.sub(r'\s*```$', '', result_text)
                 result_text = result_text.strip()
 
-                result = json.loads(result_text)
-                return self._validate_result(result)
+                try:
+                    result = json.loads(result_text)
+                    return self._validate_result(result)
+                except json.JSONDecodeError as json_err:
+                    errors.append(f"{model_name}: JSON Parse Error - {str(json_err)}\nResponse was: {result_text[:100]}...")
+                    continue
 
             except Exception as e:
-                last_error = str(e)
-                # If quota/rate limit error, try next model
-                if 'quota' in last_error.lower() or '429' in last_error:
-                    continue
-                # For JSON parse errors, also try next model
-                if isinstance(e, json.JSONDecodeError):
-                    continue
-                # For other errors, still try next model
+                errors.append(f"{model_name}: {str(e)}")
                 continue
 
         # All models failed
-        return self._get_fallback_result(last_error)
+        error_msg = " | ".join(errors)
+        return self._get_fallback_result(error_msg)
 
     def _build_prompt(self, resume_text, job_description, job_title):
         """Build the analysis prompt."""
@@ -167,7 +174,7 @@ RULES:
             'matched_skills': [],
             'missing_skills': [],
             'strengths': [],
-            'detailed_feedback': f'Analysis could not be completed. All AI models were rate-limited. Error: {error_msg}. Please wait a minute and try again.',
+            'detailed_feedback': f'Analysis could not be completed. Error details: {error_msg}. Please check your API key and quotas.',
             'recommendations': [],
             'skill_scores': {},
             'required_scores': {},

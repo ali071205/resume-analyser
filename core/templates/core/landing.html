@@ -1,195 +1,91 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}SkillSync AI — Intelligent Resume Analysis{% endblock %}
+{% block title %}SkillSync AI - Level Up Your Career{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero" id="hero-section">
-    <!-- Animated Background Particles -->
-    <div class="hero-particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    
-    <div class="hero-content">
-        <div class="hero-badge" id="hero-badge">
-            <span class="badge-dot"></span>
-            AI-Powered Analysis
-        </div>
-        
-        <h1 class="hero-title" id="hero-title">
-            Decode Your <span class="gradient-text">Resume's</span><br>
-            True <span class="gradient-text">Potential</span>
+<section class="mb-lg text-center md:text-left md:flex md:items-center md:gap-lg py-md">
+    <div class="md:flex-1">
+        <h1 class="font-display-lg text-display-lg text-primary mb-sm leading-tight">
+            Bridge the Gap to Your <span class="text-secondary">Dream Career</span>
         </h1>
-        
-        <p class="hero-subtitle" id="hero-subtitle">
-            Upload your resume, paste a job description, and let our AI engine 
-            reveal your skill gaps, match score, and personalized growth roadmap — 
-            all in seconds.
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-lg mb-lg">
+            SkillSync AI analyzes your resume against industry benchmarks, identifies critical skill gaps, and provides personalized learning paths to get you hired.
         </p>
-        
-        <div class="hero-actions" id="hero-actions">
-            <a href="{% url 'upload' %}" class="btn btn-primary btn-lg" id="cta-analyze">
-                <span class="btn-icon">🚀</span>
-                Analyze My Resume
+        <div class="flex flex-wrap gap-sm justify-center md:justify-start">
+            <a href="{% url 'upload' %}" class="bg-primary text-white font-bold px-lg py-sm rounded-full shadow-lg hover:shadow-primary/20 transition-all active:scale-95 flex items-center gap-xs">
+                <span>Start Analysis</span>
+                <span class="material-symbols-outlined">trending_up</span>
             </a>
-            <a href="#features" class="btn btn-ghost btn-lg" id="cta-learn">
-                Learn More ↓
-            </a>
-        </div>
-        
-        <!-- Stats -->
-        <div class="hero-stats" id="hero-stats">
-            <div class="stat-item">
-                <span class="stat-number" data-target="{{ total_resumes }}">{{ total_resumes }}</span>
-                <span class="stat-label">Resumes Analyzed</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="{{ total_analyses }}">{{ total_analyses }}</span>
-                <span class="stat-label">Reports Generated</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">AI</span>
-                <span class="stat-label">Powered by Gemini</span>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Hero Glow -->
-    <div class="hero-glow"></div>
-</section>
-
-<!-- Features Section -->
-<section class="features" id="features">
-    <div class="section-container">
-        <div class="section-header">
-            <h2 class="section-title">How It <span class="gradient-text">Works</span></h2>
-            <p class="section-subtitle">Three simple steps to unlock your career insights</p>
-        </div>
-        
-        <div class="features-grid">
-            <div class="feature-card" id="feature-upload">
-                <div class="feature-icon-wrap">
-                    <span class="feature-icon">📄</span>
-                    <span class="feature-step">01</span>
-                </div>
-                <h3 class="feature-title">Upload Resume</h3>
-                <p class="feature-desc">
-                    Upload your resume in PDF or DOCX format. Our advanced parser 
-                    extracts every detail with precision.
-                </p>
-            </div>
-            
-            <div class="feature-card" id="feature-analyze">
-                <div class="feature-icon-wrap">
-                    <span class="feature-icon">🤖</span>
-                    <span class="feature-step">02</span>
-                </div>
-                <h3 class="feature-title">AI Analysis</h3>
-                <p class="feature-desc">
-                    Google Gemini AI compares your skills with the job requirements, 
-                    scoring and classifying your profile.
-                </p>
-            </div>
-            
-            <div class="feature-card" id="feature-insights">
-                <div class="feature-icon-wrap">
-                    <span class="feature-icon">📊</span>
-                    <span class="feature-step">03</span>
-                </div>
-                <h3 class="feature-title">Get Insights</h3>
-                <p class="feature-desc">
-                    Receive a detailed dashboard with skill gap charts, match score, 
-                    and a downloadable PDF report.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Capabilities Section -->
-<section class="capabilities" id="capabilities">
-    <div class="section-container">
-        <div class="section-header">
-            <h2 class="section-title">Powerful <span class="gradient-text">Features</span></h2>
-            <p class="section-subtitle">Everything you need to optimize your job applications</p>
-        </div>
-        
-        <div class="capabilities-grid">
-            <div class="capability-card glass-card">
-                <span class="capability-icon">🎯</span>
-                <h4>Similarity Scoring</h4>
-                <p>AI calculates how closely your resume matches the job description (0-100).</p>
-            </div>
-            <div class="capability-card glass-card">
-                <span class="capability-icon">🔍</span>
-                <h4>Skill Extraction</h4>
-                <p>Automatically identifies all technical and soft skills from your resume.</p>
-            </div>
-            <div class="capability-card glass-card">
-                <span class="capability-icon">📉</span>
-                <h4>Gap Analysis</h4>
-                <p>Pinpoints exactly which skills you're missing for the target role.</p>
-            </div>
-            <div class="capability-card glass-card">
-                <span class="capability-icon">🏷️</span>
-                <h4>Role Classification</h4>
-                <p>Classifies you into categories: Frontend, Backend, ML, DevOps, and more.</p>
-            </div>
-            <div class="capability-card glass-card">
-                <span class="capability-icon">💡</span>
-                <h4>Smart Recommendations</h4>
-                <p>Get personalized project ideas and courses to fill your skill gaps.</p>
-            </div>
-            <div class="capability-card glass-card">
-                <span class="capability-icon">📋</span>
-                <h4>PDF Reports</h4>
-                <p>Download professional analysis reports to track your growth over time.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="cta-section" id="cta-section">
-    <div class="section-container">
-        <div class="cta-card glass-card">
-            <h2 class="cta-title">Ready to Discover Your <span class="gradient-text">Skill Gaps</span>?</h2>
-            <p class="cta-text">Start your free analysis now. No signup required.</p>
-            <a href="{% url 'upload' %}" class="btn btn-primary btn-lg" id="cta-bottom">
-                <span class="btn-icon">⚡</span>
-                Start Analysis
+            <a href="{% url 'history' %}" class="bg-surface-container-high text-primary font-bold px-lg py-sm rounded-full hover:bg-surface-container transition-all flex items-center gap-xs">
+                <span>View History</span>
+                <span class="material-symbols-outlined">history</span>
             </a>
         </div>
     </div>
+    <div class="hidden md:block md:flex-1">
+        <div class="relative w-full aspect-square max-w-md mx-auto">
+            <div class="absolute inset-0 bg-primary/5 rounded-full animate-pulse"></div>
+            <div class="absolute inset-4 bg-secondary/5 rounded-full animate-pulse" style="animation-delay: 1s"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <div class="bg-white p-6 rounded-2xl shadow-2xl border border-outline-variant/20 max-w-xs rotate-3 transform transition-transform hover:rotate-0 duration-500">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                            <span class="material-symbols-outlined">verified</span>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-outline uppercase">Match Quality</p>
+                            <p class="font-bold text-emerald-600">85% Match</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[85%]"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] font-bold text-outline">
+                            <span>Python</span>
+                            <span class="text-emerald-600">Expert</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] font-bold text-outline">
+                            <span>AWS</span>
+                            <span class="text-amber-500">Missing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
-{% endblock %}
 
-{% block extra_scripts %}
-<script>
-    // Intersection Observer for animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-            }
-        });
-    }, observerOptions);
-    
-    document.querySelectorAll('.feature-card, .capability-card, .cta-card, .section-header').forEach(el => {
-        observer.observe(el);
-    });
-</script>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md mb-xl">
+    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant/10 shadow-sm">
+        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-sm">
+            <span class="material-symbols-outlined">psychology</span>
+        </div>
+        <h3 class="font-title-sm text-title-sm mb-xs">AI-Powered Extraction</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">We use Gemini 1.5 Flash to accurately extract skills and experience from any PDF or DOCX resume.</p>
+    </div>
+    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant/10 shadow-sm">
+        <div class="w-12 h-12 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center mb-sm">
+            <span class="material-symbols-outlined">analytics</span>
+        </div>
+        <h3 class="font-title-sm text-title-sm mb-xs">Gap Analysis</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Compare your profile against specific job titles to see exactly where you stand and what's missing.</p>
+    </div>
+    <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant/10 shadow-sm">
+        <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center mb-sm">
+            <span class="material-symbols-outlined">auto_stories</span>
+        </div>
+        <h3 class="font-title-sm text-title-sm mb-xs">Learning Paths</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Get personalized project recommendations and course suggestions to fill your skill gaps effectively.</p>
+    </div>
+</div>
+
+<section class="bg-primary text-white p-lg rounded-3xl text-center">
+    <h2 class="font-headline-md text-headline-md mb-sm text-white">Ready to level up?</h2>
+    <p class="mb-lg opacity-80 max-w-md mx-auto">Join {{ total_analyses }} other professionals who have used SkillSync to analyze {{ total_resumes }} resumes.</p>
+    <a href="{% url 'upload' %}" class="inline-flex bg-white text-primary font-bold px-lg py-sm rounded-full shadow-lg hover:bg-surface-container transition-all">
+        Upload Your Resume
+    </a>
+</section>
 {% endblock %}

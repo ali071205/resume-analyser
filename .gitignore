@@ -1,6 +1,5 @@
 # Environment
 .env
-.eny
 *.pyc
 __pycache__/
 db.sqlite3

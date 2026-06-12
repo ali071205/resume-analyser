@@ -1,393 +1,219 @@
 {% extends 'core/base.html' %}
 {% load static %}
 
-{% block title %}Analysis Dashboard — SkillSync AI{% endblock %}
+{% block title %}Analysis Results - SkillSync AI{% endblock %}
 
 {% block content %}
-<div id="chart-data"
-     data-labels='{{ chart_labels|safe }}'
-     data-current='{{ chart_current|safe }}'
-     data-required='{{ chart_required|safe }}'
-     data-score='{{ overall_score }}'
-     style="display:none;"></div>
-<section class="dashboard-section" id="dashboard-section">
-    <div class="dashboard-container">
-        
-        <!-- Dashboard Header -->
-        <div class="dashboard-header">
-            <div class="dashboard-title-group">
-                <h1 class="page-title">Analysis <span class="gradient-text">Dashboard</span></h1>
-                <p class="page-subtitle">
-                    Resume: <strong>{{ analysis.resume.original_filename }}</strong>
-                    {% if analysis.job_title %}• Role: <strong>{{ analysis.job_title }}</strong>{% endif %}
-                </p>
-            </div>
-            <div class="dashboard-actions">
-                <a href="{% url 'download_report' analysis.id %}" class="btn btn-primary" id="download-pdf-btn">
-                    <span class="btn-icon">📋</span>
-                    Download PDF
-                </a>
-                <a href="{% url 'upload' %}" class="btn btn-ghost" id="new-analysis-btn">
-                    + New Analysis
-                </a>
-            </div>
+<section class="mb-lg">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-sm mb-xs">
+        <div>
+            <h1 class="font-display-lg text-display-lg text-primary">Gap Analysis</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+                Matching your profile against <span class="font-bold text-primary">{{ analysis.job_title|default:"the job description" }}</span>
+            </p>
         </div>
-        
-        <!-- Score & Category Row -->
-        <div class="metrics-row" id="metrics-row">
-            <!-- Overall Score Card -->
-            <div class="metric-card glass-card score-card" id="score-card">
-                <h3 class="metric-label">Overall Match Score</h3>
-                <div class="score-ring-container">
-                    <svg class="score-ring" viewBox="0 0 120 120" id="score-ring-svg">
-                        <circle class="score-ring-bg" cx="60" cy="60" r="52" />
-                        <circle class="score-ring-fill" cx="60" cy="60" r="52" 
-                            stroke-dasharray="326.73" 
-                            stroke-dashoffset="326.73"
-                            data-score="{{ analysis.overall_score }}" />
-                    </svg>
-                    <div class="score-value" id="score-value">
-                        <span class="score-number" data-target="{{ analysis.overall_score|floatformat:0 }}">0</span>
-                        <span class="score-percent">%</span>
-                    </div>
-                </div>
-                <p class="score-interpretation" id="score-interpretation">
-                    {% if analysis.overall_score >= 80 %}
-                        🟢 Excellent Match
-                    {% elif analysis.overall_score >= 60 %}
-                        🟡 Good Match
-                    {% elif analysis.overall_score >= 40 %}
-                        🟠 Partial Match
-                    {% else %}
-                        🔴 Needs Improvement
-                    {% endif %}
-                </p>
-            </div>
-            
-            <!-- Category Card -->
-            <div class="metric-card glass-card" id="category-card">
-                <h3 class="metric-label">Candidate Category</h3>
-                <div class="category-badge-lg">
-                    {% if analysis.category == 'frontend' %}🎨
-                    {% elif analysis.category == 'backend' %}⚙️
-                    {% elif analysis.category == 'fullstack' %}🔗
-                    {% elif analysis.category == 'ml' %}🧠
-                    {% elif analysis.category == 'devops' %}🐳
-                    {% elif analysis.category == 'data' %}📊
-                    {% elif analysis.category == 'mobile' %}📱
-                    {% else %}💻
-                    {% endif %}
-                </div>
-                <p class="category-name">{{ analysis.get_category_display }}</p>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="metric-card glass-card" id="stats-card">
-                <h3 class="metric-label">Quick Stats</h3>
-                <div class="quick-stats">
-                    <div class="quick-stat">
-                        <span class="quick-stat-value matched-color">{{ matched_skills|length }}</span>
-                        <span class="quick-stat-label">Matched Skills</span>
-                    </div>
-                    <div class="quick-stat">
-                        <span class="quick-stat-value missing-color">{{ missing_skills|length }}</span>
-                        <span class="quick-stat-label">Missing Skills</span>
-                    </div>
-                    <div class="quick-stat">
-                        <span class="quick-stat-value total-color">{{ resume_skills|length }}</span>
-                        <span class="quick-stat-label">Total Skills Found</span>
-                    </div>
-                </div>
-            </div>
+        <div class="flex items-center gap-sm">
+            <a href="{% url 'download_report' analysis.id %}" class="bg-surface-container-high text-primary font-bold px-md py-2 rounded-full hover:bg-surface-container transition-all flex items-center gap-xs text-sm">
+                <span class="material-symbols-outlined text-sm">download</span>
+                <span>Download PDF</span>
+            </a>
+            <span class="px-md py-2 bg-primary-container text-on-primary-container font-bold rounded-full text-sm">
+                Score: {{ overall_score|floatformat:0 }}%
+            </span>
         </div>
-        
-        <!-- Charts Row -->
-        <div class="charts-row" id="charts-row">
-            <!-- Radar Chart -->
-            <div class="chart-card glass-card" id="radar-chart-card">
-                <h3 class="card-title">Skill Proficiency Comparison</h3>
-                <div class="chart-container">
-                    <canvas id="radarChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Bar Chart -->
-            <div class="chart-card glass-card" id="bar-chart-card">
-                <h3 class="card-title">Skill Gap Analysis</h3>
-                <div class="chart-container">
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Skills Tags Row -->
-        <div class="skills-row" id="skills-row">
-            <!-- Matched Skills -->
-            <div class="skills-card glass-card" id="matched-skills-card">
-                <h3 class="card-title">✅ Matched Skills</h3>
-                <div class="skills-tags">
-                    {% for skill in matched_skills %}
-                    <span class="skill-tag matched">{{ skill }}</span>
-                    {% empty %}
-                    <p class="no-data">No matching skills found</p>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <!-- Missing Skills -->
-            <div class="skills-card glass-card" id="missing-skills-card">
-                <h3 class="card-title">❌ Skill Gaps</h3>
-                <div class="skills-tags">
-                    {% for skill in missing_skills %}
-                    <span class="skill-tag missing">{{ skill }}</span>
-                    {% empty %}
-                    <p class="no-data">No skill gaps — perfect match!</p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        
-        <!-- Strengths -->
-        {% if strengths %}
-        <div class="strengths-card glass-card" id="strengths-card">
-            <h3 class="card-title">💪 Key Strengths</h3>
-            <div class="strengths-list">
-                {% for strength in strengths %}
-                <div class="strength-item">
-                    <span class="strength-icon">⭐</span>
-                    <span>{{ strength }}</span>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        
-        <!-- Detailed Feedback -->
-        {% if analysis.detailed_feedback %}
-        <div class="feedback-card glass-card" id="feedback-card">
-            <h3 class="card-title">📝 Detailed Analysis</h3>
-            <div class="feedback-content">
-                {{ analysis.detailed_feedback|linebreaksbr }}
-            </div>
-        </div>
-        {% endif %}
-        
-        <!-- Recommendations -->
-        {% if recommendations %}
-        <div class="recommendations-section" id="recommendations-section">
-            <h3 class="section-title-sm">🚀 Recommended Actions to Fill Skill Gaps</h3>
-            <div class="recommendations-grid">
-                {% for rec in recommendations %}
-                <div class="recommendation-card glass-card">
-                    {% if rec.title %}
-                        <h4 class="rec-title">{{ rec.title }}</h4>
-                        {% if rec.skill_target %}
-                        <span class="rec-target">Target: {{ rec.skill_target }}</span>
-                        {% endif %}
-                        {% if rec.description %}
-                        <p class="rec-desc">{{ rec.description }}</p>
-                        {% endif %}
-                    {% else %}
-                        <p class="rec-desc">{{ rec }}</p>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        
     </div>
 </section>
+
+<!-- Analysis Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-sm mb-lg">
+    <!-- Visualization Card (Radar Chart) -->
+    <div class="md:col-span-7 bg-surface-container-lowest rounded-2xl p-sm md:p-md border border-outline-variant/10 shadow-sm overflow-hidden">
+        <div class="flex justify-between items-center mb-md">
+            <span class="font-label-caps text-label-caps text-outline uppercase">Skill Proficiency Map</span>
+            <div class="flex gap-xs">
+                <div class="flex items-center gap-1">
+                    <span class="w-3 h-3 rounded-full bg-primary/80"></span>
+                    <span class="text-[10px] font-bold">CURRENT</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <span class="w-3 h-3 rounded-full bg-secondary/80"></span>
+                    <span class="text-[10px] font-bold">TARGET</span>
+                </div>
+            </div>
+        </div>
+        <div class="w-full aspect-square max-w-[400px] mx-auto relative radar-grid rounded-full p-4">
+            <canvas id="skillRadar"></canvas>
+        </div>
+    </div>
+
+    <!-- Right Side Stats -->
+    <div class="md:col-span-5 flex flex-col gap-sm">
+        <!-- Critical Gaps -->
+        <div class="bg-surface-container-lowest rounded-2xl p-md border-l-4 border-error shadow-sm flex-grow">
+            <div class="flex items-center gap-xs mb-md">
+                <span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+                <span class="font-label-caps text-label-caps text-error uppercase">Critical Gaps</span>
+            </div>
+            <div class="space-y-md">
+                {% for skill in missing_skills|slice:":5" %}
+                <div>
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="font-title-sm text-sm">{{ skill }}</span>
+                        <span class="font-label-caps text-[10px] text-error font-bold">MISSING</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+                        <div class="h-full bg-error/20 w-full rounded-full"></div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-on-surface-variant text-sm">No major gaps identified! You're a great match.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Metric Card -->
+        <div class="bg-primary text-white rounded-2xl p-md shadow-lg relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 opacity-10">
+                <span class="material-symbols-outlined text-9xl">trending_up</span>
+            </div>
+            <p class="font-label-caps text-[10px] opacity-70 uppercase tracking-widest mb-1">Overall Match Quality</p>
+            <div class="flex items-end gap-xs">
+                <p class="font-display-lg text-4xl text-white font-bold leading-none">{{ analysis.get_category_display|upper }}</p>
+            </div>
+            <p class="text-sm mt-3 opacity-80">Based on your {{ resume_skills|length }} extracted skills.</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg mt-lg">
+    <!-- Detailed Feedback -->
+    <div>
+        <h2 class="font-headline-md text-headline-md mb-md flex items-center gap-xs">
+            <span class="material-symbols-outlined text-primary">description</span>
+            <span>AI Feedback</span>
+        </h2>
+        <div class="bg-surface-container-lowest p-md rounded-2xl border border-outline-variant/10 shadow-sm prose prose-sm max-w-none text-on-surface-variant leading-relaxed">
+            {{ analysis.detailed_feedback|linebreaks }}
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div>
+        <h2 class="font-headline-md text-headline-md mb-md flex items-center gap-xs">
+            <span class="material-symbols-outlined text-secondary">auto_stories</span>
+            <span>Bridge the Gap</span>
+        </h2>
+        <div class="space-y-sm">
+            {% for rec in recommendations %}
+            <div class="bg-surface-container-lowest p-sm md:p-md rounded-2xl border border-outline-variant/10 shadow-sm group hover:border-secondary/30 transition-all">
+                <div class="flex items-start gap-md">
+                    <div class="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <span class="material-symbols-outlined">school</span>
+                    </div>
+                    <div>
+                        <h4 class="font-title-sm text-title-sm group-hover:text-secondary transition-colors">{{ rec.title }}</h4>
+                        <p class="text-xs font-bold text-outline-variant mb-2 uppercase">{{ rec.skill_target }}</p>
+                        <p class="text-sm text-on-surface-variant">{{ rec.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-on-surface-variant">No recommendations needed. Keep up the great work!</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Skill Discrepancies (Detailed List) -->
+<div class="mt-xl">
+    <h2 class="font-headline-md text-headline-md mb-md">Skill Proficiency Details</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+        {% for skill, current in analysis.skill_scores.items %}
+        <div class="bg-surface-container-lowest p-md rounded-2xl flex items-center gap-md border border-outline-variant/5 shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+                <span class="material-symbols-outlined text-sm">settings_b_roll</span>
+            </div>
+            <div class="flex-grow">
+                <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-title-sm text-sm">{{ skill }}</h4>
+                    <span class="text-[10px] font-bold text-outline uppercase">Level {{ current|floatformat:0 }}%</span>
+                </div>
+                <div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+                    <div class="h-full bg-primary/80 rounded-full" style="width: {{ current }}%"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-    // Chart data from HTML data attributes (avoids Django template linting errors)
-    const dataEl = document.getElementById('chart-data');
-    const chartLabels = JSON.parse(dataEl.dataset.labels || '[]');
-    const chartCurrent = JSON.parse(dataEl.dataset.current || '[]');
-    const chartRequired = JSON.parse(dataEl.dataset.required || '[]');
-    const overallScore = parseFloat(dataEl.dataset.score || '0');
-    
-    // Color Palette matching the CSS theme
-    const colors = {
-        primary: 'rgba(15, 15, 15, 1)',         // #0F0F0F Black
-        primaryFade: 'rgba(15, 15, 15, 0.1)',
-        accent: 'rgba(230, 57, 70, 1)',         // #E63946 Deep Red
-        accentFade: 'rgba(230, 57, 70, 0.2)',
-        success: 'rgba(25, 135, 84, 1)',        // Green
-        successFade: 'rgba(25, 135, 84, 0.2)',
-        danger: 'rgba(230, 57, 70, 1)',         // Red
-        dangerFade: 'rgba(230, 57, 70, 0.2)',
-        text: 'rgba(33, 37, 41, 0.8)',          // Dark Gray
-        grid: 'rgba(222, 226, 230, 0.5)',       // Border Color
-    };
-    
-    // Chart.js Global Defaults
-    Chart.defaults.color = colors.text;
-    Chart.defaults.borderColor = colors.grid;
-    Chart.defaults.font.family = "'Inter', sans-serif";
-    
-    // Radar Chart
-    if (chartLabels.length > 0) {
-        const radarCtx = document.getElementById('radarChart').getContext('2d');
-        new Chart(radarCtx, {
-            type: 'radar',
-            data: {
-                labels: chartLabels,
-                datasets: [
-                    {
-                        label: 'Your Skills',
-                        data: chartCurrent,
-                        borderColor: colors.primary,
-                        backgroundColor: colors.primaryFade,
-                        borderWidth: 2,
-                        pointBackgroundColor: colors.primary,
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 1,
-                        pointRadius: 4,
-                    },
-                    {
-                        label: 'Required Level',
-                        data: chartRequired,
-                        borderColor: colors.accent,
-                        backgroundColor: colors.accentFade,
-                        borderWidth: 2,
-                        pointBackgroundColor: colors.accent,
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 1,
-                        pointRadius: 4,
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            stepSize: 20,
-                            backdropColor: 'transparent',
-                            font: { size: 10 }
+    document.addEventListener('DOMContentLoaded', function() {
+        const labels = {{ chart_labels|safe|default:"[]" }};
+        const currentData = {{ chart_current|safe|default:"[]" }};
+        const requiredData = {{ chart_required|safe|default:"[]" }};
+
+        const canvas = document.getElementById('skillRadar');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Current Proficiency',
+                            data: currentData,
+                            fill: true,
+                            backgroundColor: 'rgba(0, 6, 102, 0.2)',
+                            borderColor: '#000666',
+                            pointBackgroundColor: '#000666',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#000666',
+                            borderWidth: 2
                         },
-                        grid: { color: colors.grid },
-                        angleLines: { color: colors.grid },
-                        pointLabels: {
-                            font: { size: 11, weight: '500' },
-                            color: colors.text,
+                        {
+                            label: 'Required Proficiency',
+                            data: requiredData,
+                            fill: true,
+                            backgroundColor: 'rgba(0, 107, 92, 0.1)',
+                            borderColor: '#006b5c',
+                            pointBackgroundColor: '#006b5c',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#006b5c',
+                            borderWidth: 1.5,
+                            borderDash: [5, 5]
                         }
-                    }
+                    ]
                 },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            font: { size: 12 }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Bar Chart
-        const barCtx = document.getElementById('barChart').getContext('2d');
-        const gapData = chartLabels.map((_, i) => chartRequired[i] - chartCurrent[i]);
-        const barColors = gapData.map(g => g > 0 ? colors.danger : colors.success);
-        const barBgColors = gapData.map(g => g > 0 ? colors.dangerFade : colors.successFade);
-        
-        new Chart(barCtx, {
-            type: 'bar',
-            data: {
-                labels: chartLabels,
-                datasets: [{
-                    label: 'Skill Gap (Required - Current)',
-                    data: gapData,
-                    backgroundColor: barBgColors,
-                    borderColor: barColors,
-                    borderWidth: 2,
-                    borderRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                indexAxis: 'y',
-                scales: {
-                    x: {
-                        grid: { color: colors.grid },
-                        ticks: { font: { size: 11 } }
+                options: {
+                    elements: {
+                        line: { tension: 0.1 }
                     },
-                    y: {
-                        grid: { display: false },
-                        ticks: { font: { size: 11, weight: '500' } }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            font: { size: 12 }
+                    scales: {
+                        r: {
+                            angleLines: { color: '#c6c5d4' },
+                            grid: { color: '#c6c5d4' },
+                            pointLabels: {
+                                font: { size: 10, family: 'Inter', weight: '600' },
+                                color: '#454652'
+                            },
+                            ticks: { display: false, stepSize: 20 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
                         }
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const val = context.raw;
-                                return val > 0 
-                                    ? `Gap: ${val} points behind` 
-                                    : `Ahead: ${Math.abs(val)} points surplus`;
-                            }
-                        }
+                    plugins: {
+                        legend: { display: false }
                     }
                 }
-            }
-        });
-    }
-    
-    // Animate Score Ring
-    setTimeout(() => {
-        const ring = document.querySelector('.score-ring-fill');
-        if (ring) {
-            const circumference = 326.73;
-            const offset = circumference - (overallScore / 100) * circumference;
-            ring.style.strokeDashoffset = offset;
+            });
         }
-        
-        // Animate score counter
-        const scoreEl = document.querySelector('.score-number');
-        if (scoreEl) {
-            const target = parseInt(scoreEl.dataset.target);
-            let current = 0;
-            const increment = target / 60;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    current = target;
-                    clearInterval(timer);
-                }
-                scoreEl.textContent = Math.round(current);
-            }, 16);
-        }
-    }, 300);
-    
-    // Intersection Observer for card animations
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.glass-card, .skills-card, .feedback-card, .recommendation-card').forEach(el => {
-        observer.observe(el);
     });
 </script>
 {% endblock %}
