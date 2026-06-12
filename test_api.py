@@ -3,14 +3,21 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8')
 from google import genai
 
-client = genai.Client(api_key="AIzaSyB3GVXDf14Tz-NLcwiDPfi4Kj-MXalONKE")
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.environ.get("GEMINI_API_KEY")
+
+if not api_key:
+    raise ValueError("GEMINI_API_KEY not found in environment variables")
+
+client = genai.Client(api_key=api_key)
 
 models_to_try = [
-    "models/gemini-2.5-flash-lite",
-    "models/gemini-2.5-flash",
-    "models/gemini-2.5-pro",
-    "models/gemini-3-flash-preview",
-    "models/gemini-3-pro-preview",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-pro",
 ]
 
 for model_name in models_to_try:
