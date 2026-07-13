@@ -64,9 +64,22 @@ import dj_database_url
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 # Configured for Supabase (PostgreSQL) with SQLite fallback
+import shutil
+
+if os.getenv('VERCEL') == '1' and not os.getenv('DATABASE_URL'):
+    # On Vercel, copy SQLite DB to writable /tmp directory
+    tmp_db_path = '/tmp/db.sqlite3'
+    if not os.path.exists(tmp_db_path):
+        source_db = BASE_DIR / 'db.sqlite3'
+        if source_db.exists():
+            shutil.copy2(source_db, tmp_db_path)
+    default_db_url = f'sqlite:///{tmp_db_path}'
+else:
+    default_db_url = f'sqlite:///{BASE_DIR / "db.sqlite3"}'
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
+        default=os.getenv('DATABASE_URL', default_db_url),
         conn_max_age=600,
         conn_health_checks=True,
     )
